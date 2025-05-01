@@ -22,7 +22,6 @@ const BoardsList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Fetched boards:", res.data);
         setBoards(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         alert("Failed to fetch boards!");
@@ -35,29 +34,30 @@ const BoardsList = () => {
   }, [token, navigate]);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Your boards:</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : boards.length === 0 ? (
-        <p>No boards available!</p>
-      ) : (
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          {boards.map((board) => (
-            <BoardCard key={board._id} board={board} />
-          ))}
+    <div className="min-h-screen px-6 py-10 bg-white text-gray-900">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">Your Boards</h2>
+          <Link
+            to="/create-board"
+            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition"
+          >
+            Create Board
+          </Link>
         </div>
-      )}
-      <Link
-        style={{
-          color: "white",
-          textDecoration: "none",
-          fontSize: "1rem",
-        }}
-        to="/create-board"
-      >
-        Create Board
-      </Link>
+
+        {loading ? (
+          <p className="text-gray-600">Loading...</p>
+        ) : boards.length === 0 ? (
+          <p className="text-gray-500">No boards available.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {boards.map((board) => (
+              <BoardCard key={board._id} board={board} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

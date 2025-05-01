@@ -23,6 +23,9 @@ const Navbar = () => {
             <button onClick={handleLogout} style={styles.logoutBtn}>
               Logout
             </button>
+            <Link to="/create-board" style={styles.link}>
+              Create Board
+            </Link>
           </div>
         ) : (
           <div style={styles.links}>
@@ -31,9 +34,6 @@ const Navbar = () => {
             </Link>
             <Link to="/signup" style={styles.link}>
               SignUp
-            </Link>
-            <Link to="/create-board" style={styles.link}>
-              Create Board
             </Link>
           </div>
         )}

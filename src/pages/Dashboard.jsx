@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const [boards, setBoards] = useState([]);
@@ -16,7 +17,8 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setBoards(res.data);
+      console.log("Boards fetched:", res.data);
+      setBoards(Array.isArray(res.data.boards) ? res.data.boards : []);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching boards!", error);
@@ -41,8 +43,9 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success("Board created successfully!");
     } catch (error) {
-      alert("Error creating board!");
+      toast.error("Error creating board!");
       console.error(error);
     }
     setNewBoard({ name: "", description: "" });
@@ -62,11 +65,12 @@ const Dashboard = () => {
           },
         }
       );
+      toast.success("Board updated successfully!");
       setNewBoard({ name: "", description: "" });
       setEditingBoard(null);
       fetchBoards();
     } catch (error) {
-      alert("Errorupdating the board!");
+      toast.error("Error updating the board!");
       console.error(error);
     }
   };
@@ -79,19 +83,23 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success("Board deleted.");
       fetchBoards();
     } catch (error) {
-      alert("Error deleting board");
+      toast.error("Error deleting board");
       console.error(error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 py-12 px-4 sm:px-12">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 py-12 px-4 sm:px-12">
       <h2 className="text-3xl font-semibold mb-2">
         Welcome to the Whimsy Board
       </h2>
-      <p className="text-gray-500 mb-8">This is your quiet creative space!</p>
+      <p className="text-gray-500 dark:text-gray-400 mb-8">
+        This is your quiet creative space!
+      </p>
+
       <form
         onSubmit={editingBoard ? handleUpdateBoard : handleCreateBoard}
         className="mb-8 space-y-4"
@@ -103,7 +111,7 @@ const Dashboard = () => {
           value={newBoard.name}
           onChange={handleChange}
           required
-          className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-600"
+          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-600"
         />
         <input
           type="text"
@@ -111,12 +119,12 @@ const Dashboard = () => {
           placeholder="Description"
           value={newBoard.description}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-600"
+          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-600"
         />
         <div className="flex space-x-3">
           <button
             type="submit"
-            className="bg-gray-800 text-white px-6 py-2 rounded hover:bg-gray-700 transition"
+            className="bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 px-6 py-2 rounded hover:bg-gray-700 dark:hover:bg-gray-200 transition"
           >
             {editingBoard ? "Update board" : "Create board"}
           </button>
@@ -127,28 +135,31 @@ const Dashboard = () => {
                 setEditingBoard(null);
                 setNewBoard({ name: "", description: "" });
               }}
-              className="border border-gray-400 px-6 py-2 rounded text-gray-700 hover:bg-gray-100 transition"
+              className="border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-6 py-2 rounded transition"
             >
               Cancel
             </button>
           )}
         </div>
       </form>
+
       {loading ? (
-        <p className="text-gray-400">loading...</p>
+        <p className="text-gray-400 dark:text-gray-500">loading...</p>
       ) : boards.length === 0 ? (
-        <p className="text-gray-400">You don't have any boards yet!</p>
+        <p className="text-gray-400 dark:text-gray-500">
+          You don't have any boards yet!
+        </p>
       ) : (
         <ul className="space-y-4">
           {boards.map((board) => (
             <li
               key={board._id}
-              className="border border-gray-200 p-4 rounded hover:shadow-md transition"
+              className="border border-gray-200 dark:border-gray-700 p-4 rounded hover:shadow-md transition bg-white dark:bg-gray-800"
             >
               <div className="flex justify-between items-center">
                 <Link
                   to={`/board/${board._id}`}
-                  className="text-lg font-medium text-gray-900 hover:underline"
+                  className="text-lg font-medium text-gray-900 dark:text-gray-100 hover:underline"
                 >
                   <strong>{board.name}</strong>
                 </Link>
@@ -161,7 +172,7 @@ const Dashboard = () => {
                         description: board.description,
                       });
                     }}
-                    className="text-sm text-gray-600 hover:underline"
+                    className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
                   >
                     Edit
                   </button>
@@ -174,7 +185,7 @@ const Dashboard = () => {
                 </div>
               </div>
               {board.description && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {board.description}
                 </p>
               )}

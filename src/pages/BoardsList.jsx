@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BoardCard from "../components/BoardCard";
+import toast from "react-hot-toast";
 
 const BoardsList = () => {
   const [boards, setBoards] = useState([]);
@@ -22,9 +23,9 @@ const BoardsList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setBoards(Array.isArray(res.data) ? res.data : []);
+        setBoards(Array.isArray(res.data.boards) ? res.data.boards : []);
       } catch (error) {
-        alert("Failed to fetch boards!");
+        toast.error("Failed to fetch boards!");
         console.error(error);
       } finally {
         setLoading(false);
@@ -34,22 +35,24 @@ const BoardsList = () => {
   }, [token, navigate]);
 
   return (
-    <div className="min-h-screen px-6 py-10 bg-white text-gray-900">
+    <div className="min-h-screen px-6 py-10 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Your Boards</h2>
           <Link
             to="/create-board"
-            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition"
+            className="text-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition"
           >
             Create Board
           </Link>
         </div>
 
         {loading ? (
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         ) : boards.length === 0 ? (
-          <p className="text-gray-500">No boards available.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            No boards available.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {boards.map((board) => (

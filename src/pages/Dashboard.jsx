@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_URL } from "../config";
 
 const Dashboard = () => {
   const [boards, setBoards] = useState([]);
@@ -12,7 +13,7 @@ const Dashboard = () => {
   const fetchBoards = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/boards", {
+      const res = await axios.get(`${API_URL}/api/boards`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +39,7 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/boards", newBoard, {
+      await axios.post(`${API_URL}/api/boards`, newBoard, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,15 +57,11 @@ const Dashboard = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      await axios.patch(
-        `http://localhost:5000/api/boards/${editingBoard._id}`,
-        newBoard,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.patch(`${API_URL}/api/boards/${editingBoard._id}`, newBoard, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Board updated successfully!");
       setNewBoard({ name: "", description: "" });
       setEditingBoard(null);
@@ -78,7 +75,7 @@ const Dashboard = () => {
   const handleDeleteBoard = async (boardId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/boards/${boardId}`, {
+      await axios.delete(`${API_URL}/api/boards/${boardId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

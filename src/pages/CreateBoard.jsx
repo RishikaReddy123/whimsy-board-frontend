@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API_URL } from "../config.js";
 
 const CreateBoard = () => {
   const navigate = useNavigate();
@@ -22,15 +23,11 @@ const CreateBoard = () => {
 
     setLoading(true);
 
-    const createBoardPromise = axios.post(
-      "http://localhost:5000/api/boards",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const createBoardPromise = axios.post(`${API_URL}/api/boards`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     toast.promise(createBoardPromise, {
       loading: "Creating board...",

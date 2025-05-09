@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SaveToBoardModal from "../components/SaveToBoardModal.jsx";
 import toast from "react-hot-toast";
+import { API_URL } from "../config.js/";
 
 const BoardDetail = () => {
   const navigate = useNavigate();
@@ -32,10 +33,10 @@ const BoardDetail = () => {
     const fetchBoardData = async () => {
       try {
         const [boardRes, pinsRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/boards/${boardId}`, {
+          axios.get(`${API_URL}/api/boards/${boardId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`http://localhost:5000/api/pins/board/${boardId}`, {
+          axios.get(`${API_URL}/api/pins/board/${boardId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -78,7 +79,7 @@ const BoardDetail = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/pins`,
+        `${API_URL}/api/pins`,
         { ...newPin, board: boardId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -108,7 +109,7 @@ const BoardDetail = () => {
 
   const handleUpdatePin = async (pinId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/pins/${pinId}`, editData, {
+      await axios.patch(`${API_URL}/api/pins/${pinId}`, editData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPins((prevPins) =>
@@ -131,7 +132,7 @@ const BoardDetail = () => {
 
   const handleDeletePin = async (pinId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/pins/${pinId}`, {
+      await axios.delete(`${API_URL}/api/pins/${pinId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPins((prev) => prev.filter((pin) => pin._id !== pinId));
@@ -156,12 +157,9 @@ const BoardDetail = () => {
   const handleGenerateMetadata = async () => {
     if (!newPin.description.trim()) return toast.error("Enter a description!");
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/ai/generate-metadata",
-        {
-          description: newPin.description,
-        }
-      );
+      const res = await axios.post(`${API_URL}/api/ai/generate-metadata`, {
+        description: newPin.description,
+      });
       const content = res.data.metadata;
       const captionMatch = content.match(
         /caption[:\-]?\s*["“]?(.+?)["”]?\s*(tags|$)/i

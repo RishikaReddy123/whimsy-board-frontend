@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API_URL } from "../config.js";
 
 const SaveToBoardModal = ({ pinId, onClose, onSuccess }) => {
   const [boards, setBoards] = useState([]);
@@ -10,7 +11,7 @@ const SaveToBoardModal = ({ pinId, onClose, onSuccess }) => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/boards", {
+        const res = await axios.get(`${API_URL}/api/boards`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched boards:", res.data.boards);
@@ -27,7 +28,7 @@ const SaveToBoardModal = ({ pinId, onClose, onSuccess }) => {
     if (!selectedBoard) return;
     try {
       await axios.post(
-        `http://localhost:5000/api/pins/${pinId}/save`,
+        `${API_URL}/api/pins/${pinId}/save`,
         { board: selectedBoard },
         {
           headers: { Authorization: `Bearer ${token}` },

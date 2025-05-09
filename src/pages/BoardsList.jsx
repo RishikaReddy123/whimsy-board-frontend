@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BoardCard from "../components/BoardCard";
 import toast from "react-hot-toast";
+import { API_URL } from "../config.js";
 
 const BoardsList = () => {
   const [boards, setBoards] = useState([]);
@@ -18,7 +19,7 @@ const BoardsList = () => {
 
     const fetchBoards = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/boards", {
+        const res = await axios.get(`${API_URL}/api/boards`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

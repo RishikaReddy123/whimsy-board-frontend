@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_URL } from "../config.js";
 
 const Signup = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -14,7 +15,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      await axios.post(`${API_URL}/api/auth/register`, formData);
       navigate("/login");
     } catch (error) {
       toast.error(error.response?.data?.message || "Signup Failed!");
